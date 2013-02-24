@@ -1,0 +1,8 @@
+.body {
+  font-weight: bolder;
+}
+
+input {
+  background: #ddd;
+  width: 2em;
+}

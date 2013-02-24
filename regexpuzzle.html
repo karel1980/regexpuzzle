@@ -1,0 +1,58 @@
+<html>
+
+<link rel="Stylesheet" type="text/css" href="css/regexpuzzle.css"/>
+<!--
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+-->
+<script src="js/jquery-1.9.0.min.js"></script>
+<script src="js/regexpuzzle.js"></script>
+<script>
+var puzzledef = {
+  "expressions": [
+    [0,0,"A",7,/.*H.*H.*/],
+    [1,0,"A",8,/(DI|NS|TH|OM)*/],
+    [2,0,"A",9,/F.*[AO].*[AO].*/],
+    [3,0,"A",10, /(O|RHH|MM)*/],
+    [4,0,"A",11, /.*/],
+    [5,0,"A",12, /C*MC(CCC|MM)*/],
+    [6,0,"A",13,/[^C]*[^R]*III.*/],
+    [7,1,"A",12,/(...?)\1*/],
+    [8,2,"A",11,/([^X]XCC)/],
+    [9,3,"A",10,/(RR|HHH)*/],
+    [10,4,"A",9,/N.*X.X.X.*E/],
+    [11,5,"A",8,/R*D*M*/],
+    [12,6,"A",7,/.(C|HH)*/],
+    [12,6,"C",7,/.*G.*V.*H.*/],
+    [12,7,"C",8,/[CR]*/],
+    [12,8,"C",9,/.*XEXM*/],
+    [12,9,"C",10,/.*DD.*CCM.*/],
+    [12,10,"C",11,/.*XHCR.*X.*/],
+    [12,11,"C",12,/.*(.)(.)(.)(.)\4\3\2\1.*/],
+    [12,12,"C",13,/.*(IN|SE|HI)/],
+    [12,12,"C",12,/[^C]*MMM[^C]*/],
+    [11,12,"C",11,/.*(.)C\1X\1.*/],
+    [10,12,"C",10,/[CEIMU]*OH[AEMOR]*/],
+    [9,12,"C",9,/(RX|[^R])*/],
+    [8,12,"C",8,/[^M]*M[^M]*/],
+    [7,12,"C",7,/(S|MM|HHH)*/],
+    [6,12,"B",7,/.*SE.*UE.*/],
+    [5,11,"B",8,/.*LR.*LR.*/],
+    [4,10,"B",9,/.*OXR.*/],
+    [3,9,"B",10,/([^EMC]|EM)*/],
+    [2,8,"B",11,/(HHX|^HX])*/],
+    [1,7,"B",12,/.*PRR.*DDC.*/],
+    [0,6,"B",13,/.*/],
+    [0,5,"B",12,/[AM]*CM(RC)*R?/],
+    [0,4,"B",11,/([^MC]|MM|CC)*/],
+    [0,3,"B",10,/(E|CR|MN)*/],
+    [0,2,"B",9,/P+(..)\1.*/],
+    [0,1,"B",8,/[CHMNOR]*I[CHMNOR]*/],
+    [0,0,"B",7,/(ND|ET|IN)[^X]*/]
+  ]
+};
+</script>
+<div>
+  <table id="puzzletable" border="1">
+  </table>
+</div>
+</html>
