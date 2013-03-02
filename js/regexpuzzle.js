@@ -72,6 +72,7 @@ C bottom-right to top-left
       this.expressions.push({
         row: row,
         col: col,
+        dir: dir,
         rowDir: rowDir,
         colDir: colDir,
         length: length,
@@ -148,7 +149,7 @@ C bottom-right to top-left
     this.$table.append($row);
 
     // tmeporary fix: create cells for the first row (which only contains labels)
-    for (var i = 0; i < 27; i++) {
+    for (var i = 0; i < 29; i++) {
       $row.append($("<td>"));
     }
 
@@ -165,7 +166,19 @@ C bottom-right to top-left
         $cell = $("<td></td>");
         $row.append($cell);
       }
+      $cell = $("<td></td>");
+      $row.append($cell);
+      $cell = $("<td></td>");
+      $row.append($cell);
+      $cell = $("<td></td>");
+      $row.append($cell);
       this.$table.append($row);
+    }
+
+    $row = $("<tr/>");
+    this.$table.append($row);
+    for (var i = 0; i < 29; i++) {
+      $row.append($("<td>"));
     }
 
     // create inputs
@@ -177,6 +190,10 @@ C bottom-right to top-left
           var $cell = this.cellToTableCell(cell.row, cell.col);
           //$cell.text("" + cell.row + "," + cell.col + "//" + coords[0] + "," + coords[1]);
           var $input = $("<input type=\"text\"/>");
+          var view = this;
+          $input.keyup(function() {
+            view.update();
+          });
           $cell.append($input);
         }
       }
@@ -184,13 +201,81 @@ C bottom-right to top-left
 
     // create labels
     for (var i in this.puzzle.expressions) {
-      var e = this.puzzle.expressions;
+      var e = this.puzzle.expressions[i];
 
-      $labelCell = this.cellToTableCell(e.row - e.rowDir, e.col - e.colDir);
-      $labelCell.text("XXX");
-      
+      $labelCell = this.labelCell(e);
+      var $firstCell = this.cellToTableCell(e.row, e.col);
+      var pos = $firstCell.position();
+      var $span = $("<span/>");
+      $span.text(e.pattern);
+      $span.addClass("label");
+      $span.addClass("label" + e.dir);
+      $span.css("position", "absolute");
+      $labelCell.append($span);
+      if (e.dir == "A") {
+        $span.css("top", pos.top + ($firstCell.height() - $span.height()) / 2);
+        $span.css("left", pos.left - $span.width() - 10);
+      } else if (e.dir == "B") {
+        $span.css("top", pos.top - $span.height() / 2);
+        $span.css("left", pos.left + $firstCell.width() - $span.width());
+      } else if (e.dir =="C") {
+        $span.css("top", pos.top + $firstCell.height() - $span.height() / 2);
+        $span.css("left", pos.left + $firstCell.width() - $span.width());
+      }
     }
-   
+  }
+
+  TableView.prototype.labelCell = function(e) {
+    return this.cellToTableCell(e.row - e.rowDir, e.col - e.colDir);
+  }
+
+  TableView.prototype.update = function() {
+    for (var i in this.puzzle.expressions) {
+      var e = this.puzzle.expressions[i];
+      var text = this.getText(e);
+
+      $labelCell = this.labelCell(e);
+      if (text.match(e.pattern)) {
+        $labelCell.find("span").addClass("correct");
+      } else {
+        $labelCell.find("span").removeClass("correct");
+      }
+    }
+
+    // update fragId
+    var state = "";
+    var firstRow = true;
+    for (var i in this.puzzle.hexPanels.rows) {
+      var row = this.puzzle.hexPanels.rows[i];
+      if (!firstRow) {
+        state += ";";
+      }
+      firstRow = false;
+      var firstCell = true;
+      for (var j in row) {
+        var cell = row[j];
+        if (cell == undefined) {
+          continue;
+        }
+        if (!firstCell) {
+          state += ",";
+        }
+        firstCell = false;
+        state+=this.cellToTableCell(cell.row, cell.col).find("input").val();
+      }
+    }
+    window.location.hash=state;
+  }
+
+  TableView.prototype.getText = function(e) {
+    result = "";
+    for (var j = 0; j < e.length; j++) {
+      $cell = this.cellToTableCell(e.row + j*e.rowDir, e.col + j*e.colDir);
+      var cellVal = $cell.find("input").val();
+      if (cellVal == "") cellVal = " ";
+      result += cellVal;
+    }
+    return result;
   }
 
   TableView.prototype.cellToTableCell = function(r, c) {
@@ -201,12 +286,38 @@ C bottom-right to top-left
 
   TableView.prototype.getCellCoordinates = function(r, c) {
     var tr = r + 1;
-    var tc = 2 * c + 1 - r - this.leftMost;
+    var tc = 2 * c + 2 - r - this.leftMost;
     return [ tr, tc ];
+  }
+
+  TableView.prototype.loadFragId = function() {
+    var fragId = window.location.hash;
+    if (fragId.length == 0) {
+      return;
+    } else {
+      fragId = fragId.substring(1);
+    }
+    var rows = fragId.split(";");
+    for (var i in this.puzzle.hexPanels.rows) {
+      var row = this.puzzle.hexPanels.rows[i];
+      var cols = rows[i].split(",");
+      var col = 0;
+      for (var j in row) {
+        var cell = row[j];
+        if (cell == undefined) {
+          continue;
+        }
+        var val = cols[col];
+        this.cellToTableCell(cell.row, cell.col).find("input").val(val);
+        col++;
+      }
+    }
   }
 
   var $table = $("#puzzletable");
   var puzzle = new Puzzle(puzzledef);
   var tableView = new TableView($table, puzzle);
+  tableView.loadFragId();
+  tableView.update();
 
 });

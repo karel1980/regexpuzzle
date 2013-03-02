@@ -2,7 +2,30 @@
   font-weight: bolder;
 }
 
+#puzzletable {
+  margin: auto;
+}
+
 input {
   background: #ddd;
   width: 2em;
+}
+
+.label span {
+  background: #f99;
+}
+
+span.correct {
+  background: #9f9;
+}
+
+.labelA {
+}
+.labelB {
+  -webkit-transform: rotate(135deg);
+  -webkit-transform-origin: 100% 50%;
+}
+.labelC {
+  -webkit-transform: rotate(225deg);
+  -webkit-transform-origin: 100% 50%;
 }
