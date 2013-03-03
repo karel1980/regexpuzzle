@@ -23,3 +23,5 @@ Register the name regexpuzzles.com and do something awesome.
 # Bugs
 
 When you open the puzzle using a bookmark, the state isn't loaded immediately. Just go to the address bar and hit enter to make it load
+
+When you change the zoom level in your browser you need to reload the page to align the regex labels.
